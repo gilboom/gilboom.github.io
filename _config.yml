@@ -103,3 +103,7 @@ theme: next
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
+
+beian:
+  enable: true
+  icp: 粤ICP备 2021127501号-1
