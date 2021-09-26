@@ -103,13 +103,3 @@ theme: next
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
-
-footer:
-  beian:
-    enable: true
-    icp: '粤ICP备 2021127501号-1'
-    gongan_id:
-    # The full num of gongan beian.
-    gongan_num:
-    # The icon for gongan beian. See: http://www.beian.gov.cn/portal/download
-    gongan_icon_url: http://www.beian.gov.cn/portal/download
