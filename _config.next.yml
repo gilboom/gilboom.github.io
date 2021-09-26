@@ -1,7 +1,7 @@
 footer:
   beian:
     enable: true
-    icp: '粤ICP备 2021127501号-1'
+    icp: '粤ICP备2021127501号-1'
     gongan_id:
     # The full num of gongan beian.
     gongan_num:
