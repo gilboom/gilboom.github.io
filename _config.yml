@@ -104,6 +104,7 @@ theme: next
 deploy:
   type: ''
 
-beian:
+footer:
+  beian:
   enable: true
   icp: 粤ICP备 2021127501号-1
