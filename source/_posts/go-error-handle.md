@@ -1,6 +1,5 @@
 ---
 title: Go 语言中的错误处理
-date: 2021-10-30
 tags: Golang
 ---
 
@@ -76,6 +75,64 @@ func main() {
 // }
 ```
 
-这里为什么会这样呢？其实道理很简单，首先 NewError 方法(也就是 errors.New 方法) 返回了 error 接口变量，err1 和 err2 都是。
+这里为什么会这样呢？其实道理很简单，首先 NewError 方法(也就是 errors.New 方法) 返回了 error 接口变量，err1 和 err2 都是。那么要比较两个接口变量，要满足其中一个条件：
 
-... 未完待续
+1. 接口变量的实际类型和实际值是 nil。
+2. 接口变量的实际类型是相同的并且是 comparable 的类型。
+
+其中条件 2 非常好理解，实际类型如果都不相同，那肯定不相同。条件 1 可以这么想，如果一个接口变量的实际值和实际类型都是 nil，那么另外一个接口变量要相等只有一中情况，就是实际值和实际类型一样都是 nil，其他情况都不相等（比如实际类型不是 nil，实际值是 nil，参照条件 2 所以两者不相等。实际类型是 nil，实际值不是 nil 的情况不可能发生）。
+
+另外值得注意的是，要使得条件 1 中的接口变量的实际类型和实际值都是 nil，要保证一开始赋值的 nil 是纯净的 nil。举个例子：
+
+```Golang
+package main
+
+type Greeter interface {
+	SayHello(name string) string
+}
+
+type User struct {
+}
+
+func (*User) SayHello(name string) string {
+	return fmt.Sprintf("Hello %q", name)
+}
+
+
+func main() {
+	// 1: Pure nil
+	var gt1 Greeter = nil
+	var u *User = nil
+	// 2: Non-Pure nil
+	var gt2 Greeter = u
+}
+```
+
+在上面的例子中，gt1 的 Greeter 接口变量在一开始赋值的时候用纯净的 nil 字面量直接赋值，所以实际类型和实际值都是 nil。gt2 的 Greeter 接口变量是用了一个指针值是 nil 的 User 指针变量去赋值，所以 gt2 的实际类型是 *User，实际值是 nil。
+
+说到这里，就讲清楚了为什么两个相同构造参数的 error 接口变量不想等。确实，在极端情况下，有可能有两个 error 它们虽然底层的 s 字符串相同，但可能来自不同的包，可不能搞混。所以 errors.New 方法的正确用法是：在包中定义 error 常量，然后返回错误的时候直接返回 error 常量，而不是每次用到的时候用 errors.New 直接返回一个新的 error。举个例子：
+
+```Golang
+package Cert
+
+import (
+	"errors"
+)
+
+type Cert struct {}
+
+const (
+	ErrCertNotFound error = errors.New("can not find the specified cert")
+	ErrCertIsInvalid error = errors.New("cert content is invalid")
+)
+
+func GetCert(id int64) (Cert, error) {
+	// return nil, errors.New("can not find the specified cert") 不要这么干
+	return nil, ErrCertNotFound
+}
+
+func ParseCert(content string) (Cert, error) {
+	// 	return nil, errors.New("cert content is invalid") 不要这么干
+	return nil, ErrCertIsInvalid
+}
+```
