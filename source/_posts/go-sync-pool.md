@@ -1,5 +1,5 @@
 ---
-title: go-sync-pool
+title: Go 语言中的 sync.Pool
 date: 2021-11-01 23:54:58
 tags: Golang
 ---
