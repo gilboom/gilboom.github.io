@@ -2,8 +2,8 @@ footer:
   beian:
     enable: true
     icp: '粤ICP备2021127501号-1'
-    gongan_id:
+    gongan_id: 44010602009719
     # The full num of gongan beian.
-    gongan_num:
+    gongan_num: 粤公网安备 44010602009719
     # The icon for gongan beian. See: http://www.beian.gov.cn/portal/download
-    gongan_icon_url: http://www.beian.gov.cn/portal/download
+    gongan_icon_url: /images/beian_icon.png
